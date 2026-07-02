@@ -12,20 +12,30 @@ export default function DoorScene() {
   const bgRef = useRef(null)
 
   useGSAP(() => {
+    console.log('DoorScene mounted')
+
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: scope.current,
         start: 'top top',
-        end: '+=180%',
+        end: '+=250%',
         scrub: 1,
         pin: true,
-        anticipatePin: 1
+        markers: true,
+        anticipatePin: 1,
+        onEnter: () => console.log('DoorScene enter'),
+        onLeave: () => console.log('DoorScene leave'),
+        onUpdate: (self) => console.log('progress:', self.progress.toFixed(3), 'direction:', self.direction, 'velocity:', self.getVelocity())
       }
     })
 
-    tl.fromTo(closedRef.current, { opacity: 1, scale: 1 }, { opacity: 0, scale: 1.04, ease: 'none' }, 0)
-      .fromTo(openRef.current, { opacity: 0, scale: 1.02 }, { opacity: 1, scale: 1, ease: 'none' }, 0.35)
-      .fromTo(bgRef.current, { scale: 1 }, { scale: 1.08, ease: 'none' }, 0.15)
+    tl.set(openRef.current, { opacity: 0 })
+      .set(bgRef.current, { scale: 1 })
+      .fromTo(closedRef.current, { opacity: 1, scale: 1 }, { opacity: 0, scale: 1.03, ease: 'none' }, 0.15)
+      .to(bgRef.current, { scale: 1.08, ease: 'none' }, 0.2)
+      .to(openRef.current, { opacity: 1, scale: 1, ease: 'none' }, 0.5)
+
+    console.log('Timeline created', tl)
   }, { scope })
 
   return (
