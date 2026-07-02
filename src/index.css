@@ -84,7 +84,7 @@ img {
 }
 
 .door-scene__bg,
-.door-scene__door {
+.door-scene__layer {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -92,9 +92,19 @@ img {
   object-fit: cover;
 }
 
-.door-scene__door {
-  z-index: 2;
+.door-scene__bg {
+  z-index: 0;
   transform-origin: center center;
+}
+
+.door-scene__layer {
+  z-index: 1;
+  transform-origin: center center;
+  will-change: transform, opacity;
+}
+
+.door-scene__open {
+  z-index: 2;
 }
 
 .door-scene__text {
