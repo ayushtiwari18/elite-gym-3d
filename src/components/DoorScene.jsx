@@ -21,19 +21,29 @@ export default function DoorScene() {
         end: '+=250%',
         scrub: 1,
         pin: true,
-        markers: true,
         anticipatePin: 1,
+        markers: true,
+        invalidateOnRefresh: true,
         onEnter: () => console.log('DoorScene enter'),
         onLeave: () => console.log('DoorScene leave'),
-        onUpdate: (self) => console.log('progress:', self.progress.toFixed(3), 'direction:', self.direction, 'velocity:', self.getVelocity())
+        onUpdate: (self) =>
+          console.log(
+            'progress:',
+            self.progress.toFixed(3),
+            'direction:',
+            self.direction,
+            'velocity:',
+            self.getVelocity()
+          )
       }
     })
 
-    tl.set(openRef.current, { opacity: 0 })
-      .set(bgRef.current, { scale: 1 })
-      .fromTo(closedRef.current, { opacity: 1, scale: 1 }, { opacity: 0, scale: 1.03, ease: 'none' }, 0.15)
-      .to(bgRef.current, { scale: 1.08, ease: 'none' }, 0.2)
-      .to(openRef.current, { opacity: 1, scale: 1, ease: 'none' }, 0.5)
+    tl.set([bgRef.current, openRef.current], { opacity: 1 })
+      .set(openRef.current, { opacity: 0 })
+      .set(closedRef.current, { opacity: 1 })
+      .to(closedRef.current, { opacity: 0, ease: 'none', duration: 0.35 }, 0.15)
+      .to(bgRef.current, { scale: 1.08, ease: 'none', duration: 0.7 }, 0.1)
+      .to(openRef.current, { opacity: 1, ease: 'none', duration: 0.45 }, 0.45)
 
     console.log('Timeline created', tl)
   }, { scope })

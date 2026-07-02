@@ -91,7 +91,6 @@ img {
   object-fit: cover;
   z-index: 0;
   transform-origin: center center;
-  will-change: transform;
 }
 
 .door-scene__layer {
