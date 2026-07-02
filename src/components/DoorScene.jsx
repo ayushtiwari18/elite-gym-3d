@@ -14,38 +14,45 @@ export default function DoorScene() {
   useGSAP(() => {
     console.log('DoorScene mounted')
 
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: scope.current,
-        start: 'top top',
-        end: '+=250%',
-        scrub: 1,
-        pin: true,
-        anticipatePin: 1,
-        markers: true,
-        invalidateOnRefresh: true,
-        onEnter: () => console.log('DoorScene enter'),
-        onLeave: () => console.log('DoorScene leave'),
-        onUpdate: (self) =>
-          console.log(
-            'progress:',
-            self.progress.toFixed(3),
-            'direction:',
-            self.direction,
-            'velocity:',
-            self.getVelocity()
-          )
-      }
-    })
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: scope.current,
+          start: 'top top',
+          end: '+=250%',
+          scrub: 1,
+          pin: true,
+          anticipatePin: 1,
+          markers: true,
+          invalidateOnRefresh: true,
+          onEnter: () => console.log('DoorScene enter'),
+          onLeave: () => console.log('DoorScene leave'),
+          onUpdate: (self) =>
+            console.log(
+              'progress:',
+              self.progress.toFixed(3),
+              'direction:',
+              self.direction,
+              'velocity:',
+              self.getVelocity()
+            )
+        }
+      })
 
-    tl.set([bgRef.current, openRef.current], { opacity: 1 })
-      .set(openRef.current, { opacity: 0 })
-      .set(closedRef.current, { opacity: 1 })
-      .to(closedRef.current, { opacity: 0, ease: 'none', duration: 0.35 }, 0.15)
-      .to(bgRef.current, { scale: 1.08, ease: 'none', duration: 0.7 }, 0.1)
-      .to(openRef.current, { opacity: 1, ease: 'none', duration: 0.45 }, 0.45)
+      tl.set(openRef.current, { opacity: 0 })
+        .set(bgRef.current, { opacity: 1, scale: 1 })
+        .set(closedRef.current, { opacity: 1, scale: 1 })
+        .to(closedRef.current, { opacity: 0, ease: 'none', duration: 0.35 }, 0.15)
+        .to(bgRef.current, { scale: 1.08, ease: 'none', duration: 0.7 }, 0.1)
+        .to(openRef.current, { opacity: 1, ease: 'none', duration: 0.45 }, 0.45)
 
-    console.log('Timeline created', tl)
+      console.log('Timeline created', tl)
+    }, scope)
+
+    return () => {
+      ctx.revert()
+      console.log('DoorScene cleanup')
+    }
   }, { scope })
 
   return (
@@ -61,6 +68,18 @@ export default function DoorScene() {
         className="door-scene__layer door-scene__closed"
         src="/assets/door/door-closed.png"
         alt="Closed gym door"
+          />
+           <img
+        ref={openRef}
+        className="door-scene__layer door-scene__open"
+        src="/assets/door/door-ajar.png"
+        alt="ajar gym door"
+      />
+          <img
+        ref={openRef}
+        className="door-scene__layer door-scene__open"
+        src="/assets/door/door-half.png"
+        alt="half open gym door"
       />
       <img
         ref={openRef}
